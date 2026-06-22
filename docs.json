@@ -1,0 +1,124 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "almond",
+  "name": "Lightsail Power",
+  "description": "Documentation for Lightsail Power — workspace management, analytics, and integrations in one place.",
+  "colors": {
+    "primary": "#166E3F",
+    "light": "#26BD6C",
+    "dark": "#166E3F"
+  },
+  "favicon": "/favicon.ico",
+  "icons": {
+    "library": "lucide"
+  },
+  "styling": {
+    "eyebrows": "breadcrumbs"
+  },
+  "contextual": {
+    "options": ["copy", "view", "assistant", "mcp", "add-mcp"]
+  },
+  "navigation": {
+    "global": {
+      "anchors": [
+        {
+          "anchor": "Home",
+          "icon": "house",
+          "href": "/"
+        }
+      ]
+    },
+    "directory": "card",
+    "tabs": [
+      {
+        "tab": "Platform",
+        "groups": [
+          {
+            "group": "Get Started",
+            "icon": "rocket",
+            "pages": [
+              "platform/quickstart",
+              "platform/key-concepts"
+            ]
+          },
+          {
+            "group": "Configuration",
+            "icon": "settings",
+            "pages": [
+              "platform/configuration/settings",
+              "platform/configuration/user-management",
+              "platform/administration/roles-permissions"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Analytics",
+        "groups": [
+          {
+            "group": "Get Started",
+            "icon": "rocket",
+            "pages": [
+              "analytics/quickstart",
+              "analytics/connect-data"
+            ]
+          },
+          {
+            "group": "Dashboards & Reports",
+            "icon": "chart-bar",
+            "pages": [
+              "analytics/dashboards/create-dashboard",
+              "analytics/dashboards/charts-visualizations",
+              "analytics/reports/scheduled-reports"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Integrations",
+        "groups": [
+          {
+            "group": "Get Started",
+            "icon": "rocket",
+            "pages": [
+              "integrations/quickstart",
+              "integrations/authentication"
+            ]
+          },
+          {
+            "group": "Connectors",
+            "icon": "plug",
+            "pages": [
+              "integrations/connectors/crm",
+              "integrations/connectors/messaging",
+              "integrations/connectors/data-warehouses"
+            ]
+          },
+          {
+            "group": "Webhooks",
+            "icon": "webhook",
+            "pages": [
+              "integrations/webhooks/configure",
+              "integrations/webhooks/event-types"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "navbar": {
+    "links": [],
+    "primary": {
+      "type": "button",
+      "label": "Dashboard",
+      "href": "https://app.lightsailpower.com"
+    }
+  },
+  "footer": {
+    "socials": {}
+  }
+}

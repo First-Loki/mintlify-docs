@@ -1,0 +1,227 @@
+---
+title: "Webhook event types and payload reference"
+sidebarTitle: "Event Types"
+description: "Explore every webhook event type in Lightsail Power, the conditions that trigger each one, and the JSON payload fields your endpoint will receive."
+---
+
+Lightsail Power sends webhook events when significant actions occur in your workspace — a member accepts an invitation, a project is deleted, a data sync fails, or an integration loses its connection. Each event carries a `type` string that identifies what happened and a `data` object with fields specific to that event. To keep your endpoint lightweight and focused, subscribe only to the event types your application actually needs rather than receiving every event your workspace generates.
+
+## Payload structure
+
+Every webhook POST request that Lightsail Power delivers shares the same outer envelope, regardless of event type. The `data` field is the only part that varies between events.
+
+```json
+{
+  "id": "evt_01h8z3k5m7n9p2q4r6s8t0u2v4",
+  "type": "member.invited",
+  "created_at": "2024-01-15T10:30:00Z",
+  "workspace_id": "ws_abc123",
+  "data": {
+    // event-specific payload
+  }
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Unique identifier for this event delivery. Use this field for idempotency checks. |
+| `type` | string | The event type string. See the categories below for all possible values. |
+| `created_at` | string | ISO 8601 UTC timestamp indicating when the event was generated. |
+| `workspace_id` | string | The ID of the Lightsail Power workspace where the event occurred. |
+| `data` | object | Event-specific fields. Structure varies by event type — see each type below. |
+
+## Event types by category
+
+### Member events
+
+Member events fire when workspace membership changes — someone is invited, joins, loses access, or has their role updated.
+
+<Tabs>
+  <Tab title="member.invited">
+    Triggered when a workspace admin sends an invitation to a new member.
+
+    **`data` fields:**
+
+    | Field | Type | Description |
+    |-------|------|-------------|
+    | `email` | string | Email address the invitation was sent to. |
+    | `role` | string | The workspace role assigned to the invitee (e.g., `member`, `admin`). |
+    | `invited_by` | string | User ID of the member who sent the invitation. |
+    | `invitation_expires_at` | string | ISO 8601 timestamp after which the invitation link becomes invalid. |
+  </Tab>
+  <Tab title="member.joined">
+    Triggered when an invited member accepts their invitation and gains access to the workspace.
+
+    **`data` fields:**
+
+    | Field | Type | Description |
+    |-------|------|-------------|
+    | `user_id` | string | Unique identifier for the new workspace member. |
+    | `email` | string | Email address associated with the member's account. |
+    | `role` | string | The workspace role granted upon joining. |
+  </Tab>
+  <Tab title="member.deactivated">
+    Triggered when an admin deactivates a member, revoking their access to the workspace.
+
+    **`data` fields:**
+
+    | Field | Type | Description |
+    |-------|------|-------------|
+    | `user_id` | string | Unique identifier of the deactivated member. |
+    | `email` | string | Email address of the deactivated member. |
+    | `deactivated_by` | string | User ID of the admin who performed the deactivation. |
+  </Tab>
+  <Tab title="member.role_changed">
+    Triggered when a member's workspace role is updated by an admin.
+
+    **`data` fields:**
+
+    | Field | Type | Description |
+    |-------|------|-------------|
+    | `user_id` | string | Unique identifier of the member whose role changed. |
+    | `previous_role` | string | The role the member held before the change. |
+    | `new_role` | string | The role the member was assigned after the change. |
+  </Tab>
+</Tabs>
+
+---
+
+### Project events
+
+Project events fire when workspaces create, modify, or remove projects.
+
+<Tabs>
+  <Tab title="project.created">
+    Triggered when a new project is created in the workspace.
+
+    **`data` fields:**
+
+    | Field | Type | Description |
+    |-------|------|-------------|
+    | `project_id` | string | Unique identifier of the newly created project. |
+    | `name` | string | Display name of the project. |
+    | `created_by` | string | User ID of the member who created the project. |
+  </Tab>
+  <Tab title="project.updated">
+    Triggered when a project's settings or metadata are modified.
+
+    **`data` fields:**
+
+    | Field | Type | Description |
+    |-------|------|-------------|
+    | `project_id` | string | Unique identifier of the updated project. |
+    | `changed_fields` | object | Key-value pairs where each key is a field name that changed and each value is the new value for that field. |
+  </Tab>
+  <Tab title="project.deleted">
+    Triggered when a project is permanently deleted from the workspace.
+
+    **`data` fields:**
+
+    | Field | Type | Description |
+    |-------|------|-------------|
+    | `project_id` | string | Unique identifier of the deleted project. |
+    | `name` | string | Display name of the project at the time of deletion. |
+    | `deleted_by` | string | User ID of the member who deleted the project. |
+  </Tab>
+</Tabs>
+
+<Warning>
+  The `project.deleted` event is your last opportunity to capture a project's metadata before it is permanently removed. Lightsail Power does not retain deleted project data after this event is emitted.
+</Warning>
+
+---
+
+### Data source events
+
+Data source events fire when connections to external data sources change state or a sync operation completes.
+
+<Tabs>
+  <Tab title="datasource.connected">
+    Triggered when a new data source is successfully connected to the workspace.
+
+    **`data` fields:**
+
+    | Field | Type | Description |
+    |-------|------|-------------|
+    | `datasource_id` | string | Unique identifier of the newly connected data source. |
+    | `type` | string | The data source type (e.g., `postgres`, `snowflake`, `bigquery`). |
+    | `name` | string | Display name assigned to the data source during setup. |
+  </Tab>
+  <Tab title="datasource.sync_completed">
+    Triggered when a scheduled or manually triggered sync finishes successfully.
+
+    **`data` fields:**
+
+    | Field | Type | Description |
+    |-------|------|-------------|
+    | `datasource_id` | string | Unique identifier of the data source that was synced. |
+    | `rows_synced` | integer | Total number of rows written during the sync run. |
+    | `duration_ms` | integer | Total time the sync took to complete, in milliseconds. |
+  </Tab>
+  <Tab title="datasource.sync_failed">
+    Triggered when a sync run encounters an error and cannot complete.
+
+    **`data` fields:**
+
+    | Field | Type | Description |
+    |-------|------|-------------|
+    | `datasource_id` | string | Unique identifier of the data source that failed to sync. |
+    | `error_code` | string | Machine-readable error code identifying the failure category. |
+    | `error_message` | string | Human-readable description of what went wrong. |
+  </Tab>
+</Tabs>
+
+---
+
+### Integration events
+
+Integration events fire when third-party connectors are added to or removed from the workspace.
+
+<Tabs>
+  <Tab title="integration.connected">
+    Triggered when a new third-party integration is successfully authorized and connected.
+
+    **`data` fields:**
+
+    | Field | Type | Description |
+    |-------|------|-------------|
+    | `integration_id` | string | Unique identifier of the connected integration instance. |
+    | `connector_type` | string | The type of integration connected (e.g., `slack`, `salesforce`, `hubspot`). |
+  </Tab>
+  <Tab title="integration.disconnected">
+    Triggered when an integration is removed from the workspace or its authorization token is revoked.
+
+    **`data` fields:**
+
+    | Field | Type | Description |
+    |-------|------|-------------|
+    | `integration_id` | string | Unique identifier of the disconnected integration. |
+    | `connector_type` | string | The type of integration that was disconnected. |
+    | `reason` | string | Why the integration was disconnected: `user_removed`, `token_revoked`, or `token_expired`. |
+  </Tab>
+</Tabs>
+
+---
+
+## Full example payload
+
+The following is a complete webhook payload for a `member.invited` event, including every envelope field and all event-specific `data` fields.
+
+```json
+{
+  "id": "evt_01h8z3k5m7n9p2q4r6s8t0u2v4",
+  "type": "member.invited",
+  "created_at": "2024-01-15T10:30:00Z",
+  "workspace_id": "ws_abc123",
+  "data": {
+    "email": "jane@example.com",
+    "role": "member",
+    "invited_by": "user_xyz789",
+    "invitation_expires_at": "2024-01-18T10:30:00Z"
+  }
+}
+```
+
+<Tip>
+  Use the `id` field for idempotency in your event handler. Store the IDs of events you have already processed and, before acting on any incoming event, check whether its `id` is already in your store. If it is, return `200 OK` immediately without reprocessing. This protects your system from duplicate side effects when Lightsail Power retries a delivery your endpoint previously acknowledged successfully.
+</Tip>

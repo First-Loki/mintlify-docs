@@ -1,0 +1,109 @@
+---
+title: "Configure webhook endpoints in Lightsail Power"
+sidebarTitle: "Configure"
+description: "Register an HTTPS endpoint, select events, verify the HMAC-SHA256 signature header, and test your webhook with a sample payload in Lightsail Power."
+---
+
+Webhooks in Lightsail Power deliver HTTP POST requests to a URL you control whenever a selected event occurs in your workspace. Instead of polling the API for changes, your system receives real-time notifications the moment something happens — a new member joins, a data source sync completes, or an integration is disconnected. This guide walks you through setting up a webhook endpoint end to end, from registering your URL to verifying request authenticity in your application code.
+
+## Set up your webhook endpoint
+
+<Steps>
+  <Step title="Create your endpoint URL">
+    Before registering anything in Lightsail Power, make sure the server or service that will receive webhook events is ready. Your endpoint must meet these requirements:
+
+    - Accessible over the public internet via **HTTPS**
+    - Returns a **2xx status code** within **10 seconds** of receiving the request
+
+    If your handler needs more than 10 seconds to process an event, acknowledge the request immediately with a `200 OK` and process the payload asynchronously in a background job. Lightsail Power treats any response that takes longer than 10 seconds as a failed delivery and schedules a retry.
+
+    <Tip>
+      For local development, use a tunneling tool like [ngrok](https://ngrok.com) to expose your localhost server to the internet. Run `ngrok http 3000` and use the generated `https://` URL as your endpoint during testing.
+    </Tip>
+  </Step>
+
+  <Step title="Register the endpoint">
+    Once your URL is ready, add it to your Lightsail Power workspace:
+
+    1. Navigate to **Integrations → Webhooks** in the left sidebar.
+    2. Click **Add endpoint**.
+    3. Enter your HTTPS URL in the **Endpoint URL** field.
+    4. Optionally add a **Description** to help you identify this endpoint later (for example, `Production order service` or `Staging analytics pipeline`).
+    5. Click **Create**.
+
+    Lightsail Power generates a unique **secret key** for this endpoint immediately after creation. Copy and store this secret somewhere secure — it is shown **only once** and you will need it to verify incoming request signatures.
+
+    <Note>
+      The secret key is specific to this endpoint. If you register multiple endpoints, each one has its own secret. Never share or reuse secrets across endpoints.
+    </Note>
+  </Step>
+
+  <Step title="Select events to receive">
+    By default, a newly created endpoint is not subscribed to any events. To start receiving payloads:
+
+    1. Open the endpoint's detail page from **Integrations → Webhooks**.
+    2. Click **Add events**.
+    3. Choose the event types you want this endpoint to receive. You can subscribe to **all events** or pick individual types from the list.
+    4. Click **Save**.
+
+    For a full list of available event types and the payload fields each one includes, see the [Webhook event types reference](/integrations/webhooks/event-types).
+  </Step>
+
+  <Step title="Verify the signature header">
+    Every webhook request Lightsail Power sends includes an `X-Signature-256` header. This header contains an HMAC-SHA256 signature of the raw request body, signed with your endpoint's secret key. Verifying this signature confirms the request genuinely originated from Lightsail Power and has not been tampered with in transit.
+
+    Use the following pattern to verify the signature in your handler:
+
+    ```python
+    import hmac
+    import hashlib
+
+    def verify_signature(payload_body: bytes, secret: str, signature_header: str) -> bool:
+        expected = hmac.new(
+            secret.encode(),
+            payload_body,
+            hashlib.sha256
+        ).hexdigest()
+        return hmac.compare_digest(f"sha256={expected}", signature_header)
+    ```
+
+    Call `verify_signature` at the top of your handler before processing the payload. If the function returns `False`, reject the request with a `400` or `401` status and do not act on the event.
+
+    <Note>
+      Always compute the signature against the **raw, unmodified request body bytes** — not a parsed or re-serialized version. Even a single extra space will produce a different hash and cause verification to fail.
+    </Note>
+  </Step>
+
+  <Step title="Test with a sample payload">
+    After selecting your events, verify that your endpoint is reachable and your signature verification logic works correctly before relying on it in production:
+
+    1. Open the endpoint's detail page in **Integrations → Webhooks**.
+    2. Click **Send test event**.
+    3. Select the event type you want to simulate from the dropdown.
+    4. Click **Send**.
+
+    Lightsail Power delivers a sample payload to your endpoint and displays the **response status code**, **response headers**, and **response body** in the test log on the same page. A successful test confirms end-to-end connectivity and correct signature verification.
+
+    <Info>
+      Test events use realistic but synthetic data. They will not affect any actual workspace resources, members, or projects.
+    </Info>
+  </Step>
+</Steps>
+
+<Warning>
+  Never expose your endpoint secret in client-side code, environment variables committed to source control, or public repositories. If your secret is compromised, rotate it immediately: go to **Integrations → Webhooks → [your endpoint] → Rotate secret**. Lightsail Power generates a new secret instantly — update your handler's environment variable before the old secret is invalidated to avoid dropped events.
+</Warning>
+
+## Retry behavior
+
+If Lightsail Power does not receive a 2xx response from your endpoint — either because the request timed out or your server returned an error status — it automatically retries the delivery using exponential backoff. You can expect up to **5 retry attempts** spread over a **24-hour window** after the initial failure.
+
+| Attempt | Delay after previous attempt |
+|---------|------------------------------|
+| 1st retry | ~30 seconds |
+| 2nd retry | ~5 minutes |
+| 3rd retry | ~30 minutes |
+| 4th retry | ~2 hours |
+| 5th retry | ~8 hours |
+
+After 5 failed attempts, the event is marked as **undelivered** and no further retries occur. You can view the full delivery history — including response codes and bodies for each attempt — in the **Event log** tab on your endpoint's detail page. Undelivered events can be manually replayed from the same log if you need to reprocess them after fixing your endpoint.

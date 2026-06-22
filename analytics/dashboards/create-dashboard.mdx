@@ -1,0 +1,76 @@
+---
+title: "Create and customize dashboards in Lightsail Power"
+sidebarTitle: "Create Dashboard"
+description: "Build a new dashboard from scratch, populate it with charts from any connected data source, arrange the layout, and set auto-refresh."
+---
+
+Dashboards in Lightsail Power group related charts and metrics into a single, at-a-glance view — whether you're tracking revenue trends, monitoring support queue health, or surfacing operational KPIs for a specific team. This guide walks you through creating a dashboard from scratch, populating it with charts, organizing the layout, and tuning dashboard-level settings so it stays useful over time.
+
+## Create a new dashboard
+
+<Steps>
+  <Step title="Open the Dashboards section">
+    Navigate to **Analytics → Dashboards** in the left sidebar.
+  </Step>
+  <Step title="Start a new dashboard">
+    Click **New dashboard** in the top-right corner of the Dashboards page.
+  </Step>
+  <Step title="Name your dashboard">
+    Enter a name that reflects the audience or the central question it answers. Specific names like **"Revenue by region"** or **"Support queue health"** make dashboards easier to find and share than generic names like "Dashboard 1".
+  </Step>
+  <Step title="Add an optional description">
+    Use the description field to explain the dashboard's purpose, data sources, or intended audience. This text appears in the Dashboards index and helps teammates understand the context at a glance.
+  </Step>
+  <Step title="Create the dashboard">
+    Click **Create**. Your new, empty dashboard opens and is ready for charts.
+  </Step>
+</Steps>
+
+## Add charts
+
+With the dashboard open, click **Add chart** in the toolbar to open the chart editor. Each chart you add can pull from any data source connected to your Lightsail Power workspace — you're not limited to a single source per dashboard.
+
+Select a chart type, configure your axes and filters, then click **Save** to place the chart on the dashboard canvas. You can add as many charts as you need, mixing types freely across the same dashboard.
+
+<Note>
+  For a full breakdown of available chart types and configuration options — including axis settings, grouping, and appearance — see [Chart types and visualization options](/analytics/dashboards/charts-visualizations).
+</Note>
+
+## Arrange the layout
+
+Charts land on a **12-column grid** that keeps your dashboard visually consistent. You can resize and reposition any chart without touching its underlying query or configuration.
+
+<Steps>
+  <Step title="Enter edit mode">
+    Click **Edit layout** in the dashboard toolbar. Chart borders highlight to indicate they're repositionable.
+  </Step>
+  <Step title="Move charts">
+    Drag any chart to a new position on the grid. The grid snaps automatically so charts stay aligned.
+  </Step>
+  <Step title="Resize charts">
+    Drag the **bottom-right corner handle** of any chart to make it wider, taller, or both. Larger charts work well for detailed tables or time-series lines; smaller tiles suit KPI number cards.
+  </Step>
+  <Step title="Save your layout">
+    Click **Save layout** in the toolbar to commit your changes.
+  </Step>
+</Steps>
+
+<Info>
+  Layout changes are saved independently from chart configuration. You can rearrange, resize, and reorganize your dashboard at any time without affecting the underlying queries, filters, or data definitions of any chart.
+</Info>
+
+## Dashboard settings
+
+Open the **⋯** menu in the dashboard header to access the following settings:
+
+- **Rename** — Update the dashboard name and description at any time. Changes take effect immediately and are visible to all workspace members who have access.
+
+- **Duplicate** — Copy the dashboard along with all of its charts and the current layout. Use this to create a variant for a different audience or time period without rebuilding from scratch.
+
+- **Auto-refresh** — Set an automatic refresh interval to keep the dashboard current for live monitoring scenarios. Available intervals are **30 seconds**, **1 minute**, and **5 minutes**. The last-refreshed timestamp appears in the dashboard header.
+
+- **Delete** — Permanently removes the dashboard and its layout configuration. The charts themselves are **not** deleted; they remain available as standalone components and can be added to other dashboards at any time.
+
+<Warning>
+  Dashboard deletion cannot be undone. If you're unsure whether you'll need the dashboard again, use **Duplicate** to preserve a copy before deleting.
+</Warning>

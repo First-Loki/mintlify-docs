@@ -1,0 +1,115 @@
+---
+title: "Manage roles and permissions for your team"
+sidebarTitle: "Roles & Permissions"
+description: "Understand Lightsail Power's RBAC model, configure built-in and custom roles, and apply per-project overrides for granular access control."
+---
+
+Lightsail Power uses role-based access control (RBAC) to ensure every team member can access exactly what they need — and nothing more. Roles are assigned at the workspace level and define a member's default capabilities across all projects. For situations where a member needs more or fewer permissions in a specific project, you can apply per-project role overrides that take full precedence within that context without affecting the member's workspace-wide role. Together, workspace roles and project-level overrides give you precise, layered control over your entire organization's access.
+
+## Built-in roles
+
+Every Lightsail Power workspace comes with three built-in roles. These roles cover the most common access patterns and require no configuration to use.
+
+<CardGroup cols={3}>
+  <Card title="Admin" icon="shield">
+    Full access to workspace settings, billing, all projects, and member management. Admins can create and delete workspaces, enforce security policies, and manage every aspect of the platform.
+
+    **Assign sparingly.** Reserve the Admin role for the people in your organization who own the workspace configuration — such as IT leads or department heads — rather than granting it broadly.
+  </Card>
+  <Card title="Member" icon="user">
+    Can create new projects, manage content within their projects, and invite collaborators to projects they own or administer. Members cannot access billing, workspace-level settings, or other members' private projects they have not been added to.
+
+    This is the right default role for most of your team — contributors who actively create and manage work inside Lightsail Power.
+  </Card>
+  <Card title="Viewer" icon="eye">
+    Read-only access limited to projects they have been explicitly added to. Viewers can browse content, leave comments (where enabled), and export data they can see — but they cannot create, edit, or delete any content.
+
+    Use the Viewer role for stakeholders, clients, or auditors who need visibility into your work without the ability to change anything.
+  </Card>
+</CardGroup>
+
+## Custom roles
+
+If the three built-in roles don't map cleanly to how your organization is structured, you can define custom roles with exactly the permission set each function requires. Custom roles let you grant access to specific features — like analytics dashboards or integration settings — without bundling in unrelated capabilities.
+
+<Steps>
+  <Step title="Open the Roles settings page">
+    Navigate to **Settings → Roles** and click **New role** in the top-right corner.
+  </Step>
+  <Step title="Name and describe the role">
+    Enter a clear, descriptive name (e.g., `Data Analyst` or `Integration Manager`) and an optional description that explains who this role is intended for. This text is visible to Admins when assigning roles to members.
+  </Step>
+  <Step title="Configure individual permissions">
+    Toggle each permission on or off. Permissions are grouped by feature area — **Projects**, **Analytics**, **Integrations**, **Settings**, **Members**, and **Billing** — so you can quickly zero in on the access level you need.
+  </Step>
+  <Step title="Save and assign the role">
+    Click **Save role**. The new role immediately appears in the role selector when you invite members or edit an existing member's role from **Settings → Users**.
+  </Step>
+</Steps>
+
+<Info>
+  Custom roles are available on the **Business** and **Enterprise** plans. Workspace Admins can create and manage up to **20 custom roles** per workspace. If you need more, contact Lightsail Power Support to discuss your requirements.
+</Info>
+
+### Common custom role examples
+
+These examples illustrate how teams typically configure custom roles in practice. Use them as a starting point and adjust the permission toggles to fit your specific policies.
+
+<Accordion title="Data analyst">
+  A Data Analyst needs to explore and export data but should not be able to change workspace structure or manage other users.
+
+  **Recommended permissions:**
+  - ✅ View analytics dashboards and reports
+  - ✅ Export report data
+  - ❌ Access workspace settings
+  - ❌ Manage members or roles
+  - ❌ Create or delete projects
+</Accordion>
+
+<Accordion title="Integration manager">
+  An Integration Manager owns your third-party connectors and API configuration but doesn't need access to day-to-day project content.
+
+  **Recommended permissions:**
+  - ✅ Full access to Integrations and connectors
+  - ✅ View API keys (but not rotate them without Admin approval)
+  - ✅ Read-only access to projects
+  - ❌ Edit or delete project content
+  - ❌ Access billing or workspace settings
+</Accordion>
+
+<Accordion title="Billing contact">
+  A Billing Contact handles invoices and payment details without needing visibility into workspace data, member activity, or project content.
+
+  **Recommended permissions:**
+  - ✅ Access billing settings and invoices
+  - ✅ Update payment methods
+  - ❌ View or modify workspace data
+  - ❌ Manage members, roles, or projects
+</Accordion>
+
+## Per-project overrides
+
+A member's workspace-level role sets their default access everywhere in Lightsail Power, but you can override it for any individual project. The project-level role takes **full precedence** within that project — it does not affect the member's role in any other project or at the workspace level.
+
+This is useful when, for example, a Viewer on your workspace needs full editing access to a single project, or when a Member should be limited to read-only access for a sensitive initiative.
+
+<Steps>
+  <Step title="Open the project's settings">
+    Navigate to the project where you want to apply the override and click **Settings** in the project's left sidebar.
+  </Step>
+  <Step title="Go to the Members tab">
+    Select the **Members** tab to see everyone currently added to the project and their effective roles.
+  </Step>
+  <Step title="Select a new role for the member">
+    Find the member you want to update, click the role dropdown next to their name, and select the role they should hold within this project. Both built-in and custom roles are available in this dropdown.
+  </Step>
+  <Step title="Save the change">
+    Click **Save changes**. The override takes effect immediately. The member's workspace-level role remains unchanged everywhere else.
+  </Step>
+</Steps>
+
+To remove a per-project override and return a member to their workspace-level role within that project, follow the same steps and select **Use workspace role** from the role dropdown, then save. The member's access in that project will immediately reflect their workspace-level role again.
+
+<Note>
+  Removing a member from a project entirely — rather than just adjusting their role — revokes their access to that project but does not change their workspace-level role. They can be re-added to the project at any time.
+</Note>

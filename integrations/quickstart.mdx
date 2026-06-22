@@ -1,0 +1,85 @@
+---
+title: "Connect your first integration in Lightsail Power"
+sidebarTitle: "Quickstart"
+description: "Find a connector in the catalog, authenticate, map your fields, and test your first integration in under 10 minutes — the same steps work for most connector types."
+---
+
+The Lightsail Power integrations catalog provides pre-built connectors for popular tools across CRM, analytics, cloud storage, communication platforms, and more. The setup process is consistent across connector types — you search the catalog, authenticate, map your fields, and test. The only thing that varies is the authentication method the external service requires, which the connector card clearly indicates before you begin.
+
+## Prerequisites
+
+Before you start, make sure you have the following ready:
+
+- **Admin or Member role** in your Lightsail Power workspace. Viewer-only accounts cannot create or manage integrations.
+- **Credentials for the tool you want to connect.** Depending on the connector, this will be one of:
+  - An API key or personal access token issued by the external service
+  - An OAuth 2.0 app client ID and client secret (or simply your login for the service)
+  - A service account credentials file, typically a JSON key downloaded from the external service
+
+<Steps>
+  <Step title="Find your integration">
+    Navigate to **Integrations → Catalog** from the left-hand sidebar. You can either search by name using the search bar at the top of the catalog, or browse connectors by category using the filter panel on the left.
+
+    Each connector card displays:
+    - The **authentication method** the service requires (API Key, OAuth 2.0, or Service Account)
+    - The **sync capabilities** available, such as read, write, or bidirectional sync
+    - A **setup time estimate** so you know what to expect before you begin
+
+    Click the connector card to open its detail page and review any service-specific requirements before proceeding.
+  </Step>
+
+  <Step title="Authenticate">
+    Click **Connect** on the connector detail page. The authentication flow differs based on the method the service uses.
+
+    <Tabs>
+      <Tab title="API Key">
+        Paste your API key or personal access token into the provided field. Some connectors may also ask for additional identifiers such as a workspace slug, account ID, or subdomain. Fill in any required fields, then click **Save credentials**.
+      </Tab>
+      <Tab title="OAuth 2.0">
+        Click **Authorize**. Lightsail Power redirects you to the external service's authorization page. Sign in to that service if prompted, then review and grant the requested permissions. Once you approve, the service redirects you back to Lightsail Power automatically, and your tokens are stored securely.
+      </Tab>
+      <Tab title="Service Account">
+        Click **Upload credentials file** and select the JSON key or certificate file you downloaded from the external service. Enter any additional required fields shown in the dialog, such as a project ID or region, then click **Save credentials**.
+      </Tab>
+    </Tabs>
+
+    <Info>
+      Not sure which authentication method your connector uses? The connector card in the catalog lists it clearly before you click Connect. You can also check the [authentication methods](/integrations/authentication) page for a full breakdown of how each method works.
+    </Info>
+  </Step>
+
+  <Step title="Configure field mapping">
+    After authenticating, Lightsail Power presents the **field mapping screen**. This is where you define how data from the external tool corresponds to fields in your workspace data model.
+
+    Default mappings are pre-filled for the most commonly used fields — for example, a CRM contact's email address maps automatically to the workspace's `contact.email` field. Review the pre-filled mappings and adjust any that don't match your data structure.
+
+    Fields marked with an **asterisk (\*)** are required and must be mapped before you can proceed. Optional fields can be left unmapped if you don't need that data in your workspace.
+
+    <Tip>
+      If the external service uses custom fields or non-standard field names, use the **search** input inside the mapping dropdown to locate the correct source field quickly rather than scrolling through the full list.
+    </Tip>
+  </Step>
+
+  <Step title="Test the connection">
+    Click **Test connection** to trigger a sample sync. Lightsail Power pulls a small set of records from the external service using your credentials and field mappings, then displays them in a preview table for you to review.
+
+    Confirm that:
+    - Records appear in the preview and the data looks correct
+    - Mapped fields are populated as expected
+    - No fields that should contain data are empty or mismatched
+
+    If the test succeeds, click **Activate integration** to enable live syncing. If it fails, an error message explains the cause — common issues include incorrect credentials, missing permissions, or unmapped required fields.
+
+    <Note>
+      Some connectors require Lightsail Power's outbound IP addresses to be added to an allowlist in the external service before the test can succeed. Check the **Setup notes** tab on the connector's detail page for IP requirements specific to that connector before running the test.
+    </Note>
+  </Step>
+</Steps>
+
+## Next steps
+
+Now that your first integration is active, here are some useful places to go next:
+
+- [Authentication methods](/integrations/authentication) — understand how API keys, OAuth 2.0, and service accounts work, and how to rotate credentials safely
+- [Connector reference](/integrations/connectors) — browse service-specific setup notes, supported sync directions, and known limitations for each connector
+- [Webhooks and event triggers](/integrations/webhooks) — configure your integration to react to real-time events rather than relying solely on scheduled syncs

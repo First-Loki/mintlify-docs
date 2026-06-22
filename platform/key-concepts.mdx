@@ -1,0 +1,102 @@
+---
+title: "Lightsail Power Platform Concepts Explained"
+sidebarTitle: "Key Concepts"
+description: "Learn the four building blocks of Lightsail Power — workspaces, projects, roles, and API credentials — so every other guide clicks into place immediately."
+---
+
+Every feature in Lightsail Power is built on four foundational concepts: workspaces, projects, members and roles, and API credentials. These building blocks appear in the UI, in API responses, and in every piece of documentation you will encounter. Taking ten minutes to understand how they relate to each other pays dividends across the rest of your setup — you will recognize exactly where to look when you need to change a permission, scope an integration, or debug an access error.
+
+---
+
+## Workspaces
+
+A workspace is the **top-level container** for your entire organization on Lightsail Power. Everything you do — creating projects, inviting members, connecting integrations, reviewing analytics, managing billing — happens inside a workspace.
+
+Key characteristics of a workspace:
+
+- **Unique slug** — when your organization is created, Lightsail Power generates a URL slug (e.g., `acme-engineering`) that identifies your workspace in browser URLs and API calls. This slug cannot be changed after creation.
+- **Isolated by default** — each workspace operates independently. Data, members, and settings in one workspace are never visible to another workspace, even if both are owned by the same person.
+- **Holds all billing** — your subscription plan, usage metering, and invoices are attached to the workspace, not to individual projects or users.
+- **Single membership floor** — every user on Lightsail Power belongs to at least one workspace. A user can belong to multiple workspaces (for example, a contractor working across two clients), and each membership is governed by its own role.
+
+<Note>
+  If your organization needs strict data separation between teams or business units — for example, keeping a regulated division's data away from the rest of the company — consider provisioning a **separate workspace** for each unit rather than relying solely on project-level access controls.
+</Note>
+
+---
+
+## Projects
+
+A project is the **primary unit of work** within a workspace. Think of it as a dedicated environment where a specific team, initiative, or data domain lives.
+
+Each project has:
+
+- Its own **member list** — you add workspace members to a project explicitly. Being a member of the workspace does not automatically grant access to every project inside it (unless your workspace default visibility is set to Public).
+- Its own **settings** — integrations, notification preferences, data retention rules, and display options are all configured at the project level and do not affect other projects.
+- Its own **data space** — datasets, dashboards, pipelines, and analytics views belong to the project they were created in. You can export or reference data across projects using the API, but there is no automatic cross-project data sharing.
+
+You can create as many projects as your plan allows, and the same workspace member can belong to multiple projects simultaneously — with a different role in each one.
+
+<Info>
+  **Project-level role overrides take precedence over workspace-level roles.** A user who is a Viewer at the workspace level can be promoted to Admin within a specific project. Conversely, a workspace-level Member can be assigned a Viewer role on a sensitive project to restrict their access. Always check the project-level role assignment when troubleshooting unexpected permissions.
+</Info>
+
+---
+
+## Members and Roles
+
+Every person who has access to your workspace or its projects is a **member**. When you invite someone, you assign them a role that determines what they can see and do. Lightsail Power ships with three built-in roles.
+
+### Built-in roles
+
+| Role | Workspace capabilities | Project capabilities |
+|---|---|---|
+| **Admin** | Full access to workspace settings, billing, integrations, and all projects; can invite, demote, or remove any member | Full access to all project settings, data, and members, even without an explicit project-level assignment |
+| **Member** | Can view workspace-level information (member list, workspace name); cannot access billing or workspace settings | Can create and manage projects they are added to; cannot access projects they have not been invited to |
+| **Viewer** | Read-only view of workspace information they are explicitly granted access to | Read-only access to projects they are added to; cannot create, edit, or delete any content |
+
+### How role precedence works
+
+Lightsail Power evaluates permissions in this order:
+
+1. **Workspace-level role** sets a baseline for what the user can do across the workspace.
+2. **Project-level role** (if assigned) overrides the workspace baseline for that specific project only.
+3. If no project-level role is assigned, the workspace-level role applies inside projects too.
+
+<Note>
+  Custom roles with granular, permission-by-permission control are available on **Professional and Enterprise plans**. Custom roles let you, for example, allow a member to run analytics queries without the ability to modify data pipelines or invite new members.
+</Note>
+
+---
+
+## API Credentials
+
+API credentials let external tools, scripts, and services interact with your Lightsail Power workspace programmatically. You use them to pull analytics data into BI tools, push records from third-party systems, trigger pipeline runs from CI/CD workflows, and more.
+
+**How API credentials work:**
+
+- **Scoped to a workspace** — a credential can only interact with the workspace it was created in. It cannot reach across workspace boundaries.
+- **Two access levels** — when you generate a key, you choose either `read-only` (safe for dashboards and reporting tools that only pull data) or `read-write` (required for any tool that needs to create, update, or delete records).
+- **Named for traceability** — give each key a descriptive name tied to its consumer (e.g., `Tableau Production`, `GitHub Actions Deploy Pipeline`). This makes it easy to audit which system is making which calls and to revoke a specific key without disrupting others.
+- **No expiry by default** — keys do not expire automatically. Adopt a rotation schedule (quarterly is common) and revoke immediately if a key is ever exposed.
+
+To create an API key, navigate to **Settings → API Credentials** and click **Generate new key**. Copy the key immediately — Lightsail Power displays the secret value only once at creation time.
+
+<Tip>
+  Treat API keys exactly like passwords. Store them in a secrets manager (AWS Secrets Manager, HashiCorp Vault, GitHub Actions secrets) rather than in source code or plain-text config files. If a key is ever committed to a repository or logged in plain text, **rotate it immediately** — assume it is compromised.
+</Tip>
+
+---
+
+## How the Concepts Fit Together
+
+The four concepts nest inside each other in a predictable hierarchy:
+
+```
+Workspace  (unique slug, billing, settings)
+└── Projects  (units of work, own data & settings)
+    └── Members  (workspace users assigned project roles)
+        └── API Credentials  (programmatic access scoped to workspace)
+```
+
+When you encounter a permission error, a missing integration, or an unexpected data boundary, trace the issue up this hierarchy — start at the project, move to the workspace, then check whether an API credential's scope is the limiting factor. Most access and configuration questions resolve at one of these four levels.

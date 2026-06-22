@@ -1,0 +1,91 @@
+---
+title: "Invite and manage users in your workspace"
+sidebarTitle: "User Management"
+description: "Invite members by email, deactivate accounts without losing data, and bulk-import large teams via CSV — all from the Settings → Users page."
+---
+
+As a workspace Admin, you control the full member lifecycle from a single place: **Settings → Users**. From here you can invite new members one at a time, adjust their workspace roles, deactivate accounts when someone leaves your organization, and bulk-import an entire team via CSV upload. Every action you take in this section takes effect immediately, so it's worth taking a moment to confirm your choices before saving.
+
+## Invite by email
+
+Inviting members individually by email is the fastest way to bring someone into your workspace and assign them the right role from the start.
+
+<Steps>
+  <Step title="Open the invite dialog">
+    Navigate to **Settings → Users**, then click **Invite members** in the top-right corner of the page.
+  </Step>
+  <Step title="Enter email addresses">
+    Type one or more email addresses in the input field. Separate multiple addresses with commas — for example, `alex@example.com, jordan@example.com, casey@example.com`.
+  </Step>
+  <Step title="Select a workspace role">
+    Choose the role each invitee will hold at the workspace level: **Admin**, **Member**, or **Viewer**. All addresses entered in this batch receive the same role, so send separate invitations if you need different roles for different people.
+  </Step>
+  <Step title="Send the invitations">
+    Click **Send invitations**. Each invitee receives an email containing a secure link to join your workspace.
+  </Step>
+</Steps>
+
+<Note>
+  Invitation links expire after **72 hours**. If a recipient misses the window, find their entry under the **Pending invitations** tab on the Users page and click **Resend** to issue a fresh link.
+</Note>
+
+<Info>
+  The role you select during the invitation applies at the workspace level. Once a member accepts their invitation, you can assign them a different role on a per-project basis — giving them more or less access within a specific project without changing their overall workspace role. See [Roles & Permissions](/platform/administration/roles-permissions) for details on per-project overrides.
+</Info>
+
+## Deactivating accounts
+
+When a team member leaves your organization or no longer needs access, deactivating their account immediately revokes their ability to log in — without permanently deleting any of their work. All content, comments, and data they created remain fully accessible to the rest of your team.
+
+To deactivate a member's account:
+
+<Steps>
+  <Step title="Find the member">
+    Go to **Settings → Users** and search for the member by name or email address.
+  </Step>
+  <Step title="Open their profile">
+    Click the member's name to open their profile panel on the right side of the screen.
+  </Step>
+  <Step title="Deactivate the account">
+    Scroll to the bottom of the profile panel and click **Deactivate account**.
+  </Step>
+  <Step title="Confirm the action">
+    A confirmation dialog will appear summarizing what will happen. Click **Confirm deactivation** to proceed. The member's session is terminated immediately and they cannot log back in.
+  </Step>
+</Steps>
+
+Deactivated accounts appear under the **Inactive** filter on the Users page, where their profile and history remain visible to Admins. Any workspace Admin can **reactivate** a deactivated account at any time by opening the member's profile and clicking **Reactivate account** — this restores their original workspace role and all of their project memberships exactly as they were before deactivation.
+
+<Warning>
+  Deactivation does not remove a member's content or reassign their open tasks. Before deactivating an account, reassign any time-sensitive tasks to an active team member to avoid work falling through the cracks.
+</Warning>
+
+## Bulk CSV import
+
+When you need to add a large group of members at once — for example, during an initial rollout or an organizational expansion — the CSV import tool lets you provision everyone in a single upload rather than sending invitations one by one.
+
+To get started, download the official template directly from the Users page by clicking **Import members → Download template**. Open the file in your spreadsheet editor of choice, fill in your members' details, and save it as a `.csv` file.
+
+**Required columns**
+
+| Column | Description |
+|---|---|
+| `email` | The member's email address. Must be unique within the workspace. |
+| `role` | The workspace role to assign: `admin`, `member`, or `viewer`. |
+
+**Optional columns**
+
+| Column | Description |
+|---|---|
+| `first_name` | The member's first name, used to personalize their invitation email. |
+| `last_name` | The member's last name. |
+
+Once your file is ready, return to **Settings → Users → Import members** and upload it. Lightsail Power validates every row before processing. Rows that pass validation generate an invitation immediately; rows that fail validation (for example, a malformed email address or an unrecognized role value) are **skipped** and listed in the import summary report so you can correct and re-upload them.
+
+<Warning>
+  Invitations go out the moment you click **Confirm import** — there is no scheduled delay. Review your CSV carefully and spot-check a few rows before uploading. If you accidentally import incorrect addresses, you can cancel pending invitations from the **Pending invitations** tab before recipients open them.
+</Warning>
+
+<Tip>
+  Keep a copy of your import CSV as a record of who was provisioned and with which role. This makes it easy to audit access during security reviews or to re-import the file if you need to set up a parallel workspace.
+</Tip>

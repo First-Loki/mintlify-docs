@@ -1,0 +1,76 @@
+---
+title: "Sync your CRM data with Lightsail Power connectors"
+sidebarTitle: "CRM"
+description: "Connect Salesforce, HubSpot, Pipedrive, Zoho CRM, and Microsoft Dynamics 365 to sync contacts, deals, and activity history into your workspace."
+---
+
+CRM connectors pull contact records, deal pipelines, and activity history directly into your Lightsail Power workspace so you can build dashboards and reports on top of your sales data — without writing custom code or managing one-off data exports. Once a connector is active, your CRM data stays current through automatic incremental syncs, giving your team a reliable foundation for pipeline analysis, forecasting, and customer reporting.
+
+## Supported CRM systems
+
+- Salesforce
+- HubSpot
+- Pipedrive
+- Zoho CRM
+- Microsoft Dynamics 365
+
+## Setup steps
+
+<Steps>
+  <Step title="Connect your CRM">
+    Navigate to **Integrations → Catalog → CRM**, then select your CRM system from the list. Click **Connect** to begin the authorization flow.
+
+    - **Salesforce, HubSpot, Zoho CRM, and Microsoft Dynamics 365** authenticate via OAuth 2.0. You are redirected to your CRM's authorization page, where you sign in and grant Lightsail Power read access to your data.
+    - **Pipedrive** and some Zoho CRM configurations authenticate via API key. Paste your API key into the provided field and click **Save**.
+
+    Once authorization is complete, you are returned to Lightsail Power with the connection marked as active.
+  </Step>
+  <Step title="Select objects to sync">
+    After connecting, choose which CRM objects to import into your workspace. Available objects include:
+
+    - **Contacts**
+    - **Companies**
+    - **Deals**
+    - **Activities**
+    - **Custom objects** (where supported by your CRM)
+
+    Only the objects you select are imported and counted against your workspace's record limits. You can update your selection at any time from the connector settings page.
+  </Step>
+  <Step title="Configure field mapping">
+    Map your CRM's fields to the Lightsail Power data model using the field mapping editor. Standard fields — including name, email, deal stage, and close date — are mapped automatically when a recognized equivalent exists in your CRM.
+
+    For custom CRM fields, open the **Field mapping editor** and assign each custom field to its destination manually. See [Field mapping](#field-mapping) for details on how the editor works.
+  </Step>
+  <Step title="Run the initial sync">
+    Click **Start sync** to begin importing your CRM data. The first sync imports all historical records currently available in your CRM, which may take several minutes for large datasets.
+
+    Once the initial sync completes, Lightsail Power switches to incremental mode and only fetches records that have changed since the last sync. You can monitor sync status and review any errors from the connector's **Sync history** tab.
+  </Step>
+</Steps>
+
+## Field mapping
+
+The field mapping editor gives you precise control over which CRM data lands in your workspace and how it is labeled. Open the editor by navigating to your connector's settings and clicking **Edit field mapping**.
+
+The editor displays two columns: your CRM's available fields on the left and your Lightsail Power destination fields on the right. To create a mapping, drag a CRM field onto the corresponding destination field. Fields that have been mapped are highlighted; unmapped fields are not synced and do not consume records.
+
+You can return to the field mapping editor at any time to add, remove, or reassign mappings. Any changes you make take effect on the next scheduled sync. To apply changes immediately, trigger a manual sync from the **Sync history** tab.
+
+<Note>
+  Deleting a field mapping removes the corresponding data column from your workspace datasets on the next sync. Dashboards or reports that reference the removed field will display an empty column until you remap it or update your visualizations.
+</Note>
+
+## Sync intervals
+
+Choose how frequently Lightsail Power checks your CRM for new or updated records. You can set the sync interval from the connector's **Settings** tab at any time.
+
+| Interval | How it works | Best for |
+|---|---|---|
+| **Real-time (webhook-based)** | Changes in your CRM trigger an immediate sync event in Lightsail Power | Salesforce and HubSpot; live sales dashboards where data freshness is critical |
+| **Every 15 minutes** | Lightsail Power polls your CRM every 15 minutes for new or updated records | Active sales teams who need near-current pipeline data throughout the day |
+| **Hourly** | Lightsail Power polls your CRM once per hour | Most reporting and analytics use cases where slight delays are acceptable |
+| **Daily** | Lightsail Power polls your CRM once every 24 hours at a time you choose | Stable datasets, executive summaries, or lower-priority background syncs |
+
+<Warning>
+  Real-time webhook sync is only available for Salesforce and HubSpot. Selecting real-time sync for Pipedrive, Zoho CRM, or Microsoft Dynamics 365 automatically falls back to the 15-minute polling interval.
+</Warning>

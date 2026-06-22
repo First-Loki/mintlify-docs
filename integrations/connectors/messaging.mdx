@@ -1,0 +1,111 @@
+---
+title: "Connect messaging tools to Lightsail Power"
+sidebarTitle: "Messaging"
+description: "Integrate Slack, Microsoft Teams, and email to deliver scheduled reports, workspace alerts, and event notifications to your team's communication tools."
+---
+
+Messaging connectors let Lightsail Power send scheduled report deliveries, event notifications, and workspace alerts to your team's communication tools — Slack, Microsoft Teams, and email. Instead of requiring your team to log in and check dashboards manually, you can push the right data to the right channels automatically, on a schedule or in response to threshold events.
+
+## Supported messaging platforms
+
+- Slack
+- Microsoft Teams
+- Email (SMTP / custom domain)
+
+---
+
+## Slack
+
+### Connect Slack
+
+<Steps>
+  <Step title="Open the Slack connector">
+    Navigate to **Integrations → Catalog → Messaging → Slack**.
+  </Step>
+  <Step title="Start the connection">
+    Click **Connect**. You are redirected to Slack's OAuth authorization page.
+  </Step>
+  <Step title="Authorize access">
+    Sign in to your Slack workspace if prompted, then click **Allow** to grant Lightsail Power permission to post messages and access channel information.
+  </Step>
+  <Step title="Confirm the connection">
+    You are returned to Lightsail Power with the Slack connection marked as active. A confirmation message is posted to your selected default channel.
+  </Step>
+</Steps>
+
+**What you can do with the Slack connector:**
+
+- **Scheduled report delivery** — send a report snapshot to any channel on a daily, weekly, or custom schedule
+- **Webhook event notifications** — trigger a Slack message when a data threshold is crossed or a workspace event fires
+- **Workspace alerts** — receive system-level alerts (sync failures, quota warnings) in a dedicated ops channel
+
+<Info>
+  Only the workspace member who authorized the Slack connection can select private channels during setup. Public channels are available to all workspace members when configuring report delivery or alerts.
+</Info>
+
+---
+
+## Microsoft Teams
+
+### Connect Microsoft Teams
+
+<Steps>
+  <Step title="Open the Teams connector">
+    Navigate to **Integrations → Catalog → Messaging → Microsoft Teams**.
+  </Step>
+  <Step title="Sign in with Microsoft 365">
+    Click **Connect** and sign in with your Microsoft 365 account when prompted.
+  </Step>
+  <Step title="Grant permissions">
+    Review and accept the requested permissions, which allow Lightsail Power to post messages to Teams channels on your behalf.
+  </Step>
+  <Step title="Set a default channel">
+    Select the **team** and **channel** you want to use as the default delivery destination. You can override this default for individual reports or alerts.
+  </Step>
+</Steps>
+
+<Note>
+  Connecting Lightsail Power to Microsoft Teams requires administrator approval for the Lightsail Power app within your Microsoft 365 tenant. If you do not have admin rights, ask your Microsoft 365 administrator to approve the app in the Azure Active Directory admin center before attempting to connect.
+</Note>
+
+**What you can do with the Teams connector:**
+
+- Deliver formatted report snapshots to any team channel
+- Route workspace alerts to a dedicated IT or operations channel
+- Trigger event notifications from data threshold rules directly into team conversations
+
+---
+
+## Email (SMTP / custom domain)
+
+Configure a custom sending domain for report delivery emails so recipients see your company's domain in the From address instead of a generic Lightsail Power sender. This improves deliverability and makes it easy for recipients to recognize and trust automated report emails.
+
+<Steps>
+  <Step title="Open email delivery settings">
+    Navigate to **Settings → Notifications → Email delivery**.
+  </Step>
+  <Step title="Enter your SMTP server details">
+    Fill in your SMTP configuration:
+
+    | Field | Example |
+    |---|---|
+    | SMTP host | `smtp.yourcompany.com` |
+    | Port | `587` (TLS) or `465` (SSL) |
+    | Username | `reports@yourcompany.com` |
+    | Password | Your SMTP account password |
+  </Step>
+  <Step title="Set sender identity (optional)">
+    Enter a custom **From name** (e.g., `Lightsail Power Reports`) and a **reply-to address** to control how your emails appear in recipients' inboxes.
+  </Step>
+  <Step title="Verify delivery">
+    Click **Test email** to send a verification message to your account email address. Confirm it arrives before saving the configuration.
+  </Step>
+</Steps>
+
+<Tip>
+  Use a dedicated sending address such as `reports@yourcompany.com` rather than a personal or shared inbox. A dedicated address makes it easy for recipients to set up filters or allow-list delivery emails, and it keeps your report traffic separate from conversational email.
+</Tip>
+
+<Warning>
+  If your organization uses a third-party email security gateway (such as Proofpoint or Mimecast), ensure that your SMTP relay credentials are authorized to send on behalf of the configured From domain. Misconfigured SPF or DKIM records can cause report emails to be quarantined.
+</Warning>

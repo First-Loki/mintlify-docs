@@ -1,0 +1,78 @@
+---
+title: "Chart types and visualization options for dashboards"
+sidebarTitle: "Charts"
+description: "Browse all six chart types in Lightsail Power dashboards, configure axes, grouping, and filters, and customize colors and legend placement."
+---
+
+Lightsail Power dashboards support multiple chart types to suit different data shapes, analytical goals, and audience expectations. Whether you're plotting revenue over time, comparing performance across categories, or surfacing a single headline metric, the right visualization makes the difference between a chart people glance at and one they act on. This page covers every available chart type, how to configure one end-to-end, and how to tailor its appearance for maximum clarity.
+
+## Available chart types
+
+<CardGroup cols={2}>
+  <Card title="Bar chart" icon="chart-bar">
+    Compare values across discrete categories. Best for ranked lists, side-by-side comparisons, or any scenario where the relative size of groups matters more than change over time.
+  </Card>
+  <Card title="Line chart" icon="chart-line">
+    Show trends over time with a continuous line. Ideal for time-series data where the x-axis is a date or timestamp and you want to highlight movement, momentum, or seasonality.
+  </Card>
+  <Card title="Number card (KPI)" icon="hashtag">
+    Display a single metric prominently as a large number. Supports an optional comparison to a previous period, surfacing the absolute change or percentage difference at a glance.
+  </Card>
+  <Card title="Pie / Donut chart" icon="chart-pie">
+    Show proportional breakdown across a set of categories. Keep the number of slices at **five or fewer** — more categories than that hurt readability and are better served by a bar chart.
+  </Card>
+  <Card title="Table" icon="table">
+    Display raw or aggregated data in rows and columns. Supports column sorting and pagination, making it useful for operational lists, detailed breakdowns, or data exports embedded directly in a dashboard.
+  </Card>
+  <Card title="Scatter plot" icon="circle-dot">
+    Visualize correlations or distributions between two numeric dimensions. Each data point is plotted by its x-value and y-value, revealing clusters, outliers, and relationships that aggregated charts obscure.
+  </Card>
+</CardGroup>
+
+## Configuring a chart
+
+Open the chart editor by clicking **Add chart** on a dashboard or **Edit** on an existing chart. Work through the following fields to define what the chart shows and how it's structured.
+
+<Steps>
+  <Step title="Select a data source">
+    Choose from any data source already connected to your Lightsail Power workspace. The field picker updates to reflect the schema of the source you select.
+  </Step>
+  <Step title="Choose a chart type">
+    Select one of the six chart types listed above. The editor adjusts the available configuration fields to match the chosen type.
+  </Step>
+  <Step title="Set the X-axis">
+    Select the field that drives the horizontal dimension — typically a date or category field. For time-series charts, choose a date or timestamp column to unlock time-range controls.
+  </Step>
+  <Step title="Set the Y-axis">
+    Select the numeric measure you want to plot. For most chart types you can also choose an aggregation function — sum, average, count, minimum, or maximum — to apply to the raw data.
+  </Step>
+  <Step title="Add an optional Group by field">
+    Select a field to split the chart into multiple series or color segments. For a bar chart this produces grouped or stacked bars; for a line chart it produces one line per group value.
+  </Step>
+  <Step title="Apply filters">
+    Add one or more filter conditions to limit the data displayed in this chart. Chart-level filters apply only to this chart and don't affect other charts on the same dashboard.
+  </Step>
+  <Step title="Save the chart">
+    Click **Save** to apply your configuration and place the chart on the dashboard canvas.
+  </Step>
+</Steps>
+
+<Tip>
+  For time-series charts, make sure your x-axis field is a **date or timestamp** column type. Lightsail Power auto-detects date fields and automatically enables time-range zoom controls and period-comparison options for those charts.
+</Tip>
+
+## Appearance options
+
+Switch to the **Appearance** tab in the chart editor to control how the chart looks without changing the underlying data.
+
+- **Chart title and description** — Set a display title that appears above the chart and an optional subtitle for additional context. These are separate from the internal chart name used in the chart library.
+
+- **Color palette** — Choose from a set of preset palettes that are optimized for accessibility and contrast, or define custom colors per series to match your brand or highlight specific categories.
+
+- **Legend position** — Place the legend at the **bottom**, to the **right**, or hide it entirely. For charts with only one series, hiding the legend reduces visual clutter.
+
+- **Axis labels** — Show or hide axis labels individually, and replace the default field name with custom label text to make the chart self-explanatory to viewers who aren't familiar with your data schema.
+
+<Info>
+  Appearance settings are purely cosmetic — changing a color, label, or legend position never modifies the underlying query or affects data in any connected source.
+</Info>

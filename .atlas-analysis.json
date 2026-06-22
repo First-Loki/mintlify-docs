@@ -1,0 +1,110 @@
+{
+  "projectType": "saas",
+  "projectName": "Lightsail Power",
+  "projectDescription": "A SaaS platform for workspace management, data analytics, and third-party integrations that lets teams connect data sources, build dashboards, and automate reporting.",
+  "theme": "luma",
+  "primaryColor": "#166E3F",
+  "lightColor": "#26BD6C",
+  "darkColor": "#166E3F",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Platform",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "platform/quickstart",
+              "platform/key-concepts"
+            ]
+          },
+          {
+            "group": "Configuration",
+            "pages": [
+              "platform/configuration/settings",
+              "platform/configuration/user-management",
+              "platform/administration/roles-permissions"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Analytics",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "analytics/quickstart",
+              "analytics/connect-data"
+            ]
+          },
+          {
+            "group": "Dashboards & Reports",
+            "pages": [
+              "analytics/dashboards/create-dashboard",
+              "analytics/dashboards/charts-visualizations",
+              "analytics/reports/scheduled-reports"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Integrations",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "integrations/quickstart",
+              "integrations/authentication"
+            ]
+          },
+          {
+            "group": "Connectors",
+            "pages": [
+              "integrations/connectors/crm",
+              "integrations/connectors/messaging",
+              "integrations/connectors/data-warehouses"
+            ]
+          },
+          {
+            "group": "Webhooks",
+            "pages": [
+              "integrations/webhooks/configure",
+              "integrations/webhooks/event-types"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Workspace and project management with role-based access control",
+    "Multi-source data connectivity (databases, warehouses, SaaS tools)",
+    "Interactive dashboards with drag-and-drop layout",
+    "Scheduled report delivery via email and Slack",
+    "Pre-built connector catalog with OAuth 2.0, API key, and service account auth",
+    "CRM sync for Salesforce, HubSpot, Pipedrive, Zoho CRM, and Dynamics 365",
+    "Webhook event delivery with HMAC-SHA256 signature verification",
+    "Custom roles with granular permissions (Business/Enterprise plans)",
+    "Bulk CSV user import and team management",
+    "SSO via SAML 2.0 and OIDC"
+  ],
+  "publicApiSurface": [
+    "GET /workspaces",
+    "POST /workspaces/{workspace}/projects",
+    "GET /workspaces/{workspace}/members",
+    "POST /workspaces/{workspace}/members/invite",
+    "GET /analytics/data-sources",
+    "POST /analytics/data-sources",
+    "GET /analytics/dashboards",
+    "POST /analytics/dashboards",
+    "GET /analytics/reports",
+    "POST /analytics/reports/schedules",
+    "GET /integrations/connectors",
+    "POST /integrations/connectors/{connector}/connect",
+    "GET /integrations/webhooks/endpoints",
+    "POST /integrations/webhooks/endpoints",
+    "GET /integrations/webhooks/endpoints/{id}/events",
+    "X-Signature-256 HMAC-SHA256 webhook signature header"
+  ]
+}

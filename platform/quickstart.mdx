@@ -1,0 +1,110 @@
+---
+title: "Get Started with Lightsail Power in 20 Minutes"
+sidebarTitle: "Quickstart"
+description: "Set up your organization, configure your workspace, invite teammates, and launch your first project on Lightsail Power — all in under 20 minutes."
+---
+
+Lightsail Power is a SaaS platform that brings workspace management, data analytics, and third-party integrations together in one place. This guide walks you through the four essential steps to go from a brand-new account to a running project with teammates on board — so your team can start collaborating and exploring data without delay.
+
+## Prerequisites
+
+Before you begin, have the following ready:
+
+- **Admin credentials** for your identity provider (Google Workspace, Okta, Azure AD, etc.) if you plan to enable SSO during setup
+- **Email addresses** of the teammates you want to invite in your initial pilot group
+- A decision on your **workspace name** — choose something your team will immediately recognize when it appears in notifications and email digests (e.g., `Acme Engineering` rather than `Workspace 1`)
+- Your organization's preferred **timezone** and whether new projects should default to **public** (visible to all workspace members) or **private** (invite-only)
+
+<Note>
+  If any step in this guide depends on your IT department — such as configuring DNS records, supplying SSO metadata, or opening firewall rules — don't wait. Move ahead with the other steps in parallel and return to the IT-dependent step once your team responds.
+</Note>
+
+## Steps
+
+<Steps>
+  <Step title="Create Your Organization">
+    Sign in to [app.lightsailpower.com](https://app.lightsailpower.com) with your work email. On first login, Lightsail Power detects that no organization exists for your domain and automatically launches the **Organization Setup** prompt.
+
+    1. Click **Create organization** when prompted.
+    2. Enter your **organization name** — this is the display name teammates see in notification emails, the browser tab, and shared links. Use a name that is unambiguous at a glance.
+    3. Review the **service region** selection. Data residency cannot be changed after creation, so confirm with your compliance team if you have data-sovereignty requirements.
+    4. Click **Create** to provision the organization. Lightsail Power generates a unique URL slug (e.g., `acme-engineering.lightsailpower.com`) that anchors all future API calls and workspace URLs.
+
+    Once the spinner resolves, you land on the main dashboard — your organization is live.
+  </Step>
+
+  <Step title="Configure General Settings">
+    Navigate to **Settings → General** from the left sidebar. These defaults apply automatically to every new member who joins your workspace, so it is worth getting them right before you send any invitations.
+
+    Configure the following fields:
+
+    | Setting | Recommendation |
+    |---|---|
+    | **Workspace name** | Short, recognizable name for the UI header |
+    | **Timezone** | Match your team's primary working timezone |
+    | **Date & time format** | Choose ISO 8601 (`YYYY-MM-DD`) for international teams |
+    | **Default project visibility** | `Private` is the safer default; open it up per-project as needed |
+    | **Display density** | `Comfortable` for most users; `Compact` for data-heavy workflows |
+
+    Click **Save changes** after each section. Changes take effect immediately — no restart or re-login is required.
+
+    <Tip>
+      Set the timezone before you invite teammates. Lightsail Power stamps all activity logs and scheduled report deliveries using the workspace timezone, so a mismatch creates confusing timestamps in notifications.
+    </Tip>
+  </Step>
+
+  <Step title="Invite Your Teammates">
+    Go to **Settings → Users** and click **Invite members**. Lightsail Power sends each invitee a join link valid for 72 hours.
+
+    For each invite, provide:
+    - The teammate's **work email address**
+    - Their **workspace role** — choose from the three built-in options:
+
+    | Role | What they can do |
+    |---|---|
+    | **Admin** | Full access to settings, billing, and all projects |
+    | **Member** | Create and manage projects they belong to |
+    | **Viewer** | Read-only access to projects they are added to |
+
+    You can invite multiple addresses at once by entering them as a comma-separated list or by uploading a CSV.
+
+    <Warning>
+      Start with a **small pilot group** of five to ten people before doing a company-wide rollout. This lets you validate that SSO, notification routing, and project permissions behave as expected before you scale.
+    </Warning>
+
+    Once invitees accept and log in, they appear with a green **Active** badge in the Users list. Pending invites show an **Invited** badge and can be resent or revoked at any time.
+  </Step>
+
+  <Step title="Set Up Your First Project">
+    Return to the **main dashboard** and click **New project** in the top-right corner. Projects are the primary units of work in Lightsail Power — each one has its own members, settings, and data space.
+
+    Fill in the project creation form:
+
+    1. **Name** — use a clear, descriptive name (e.g., `Q3 Sales Analytics` or `Marketing Data Pipeline`). Avoid generic names like `Test` unless this is explicitly a sandbox.
+    2. **Description** — one or two sentences explaining the project's purpose. Future teammates will read this when deciding whether to request access.
+    3. **Visibility** — set to **Private** for your first project so you can experiment freely.
+    4. **Initial members** — add the pilot teammates you invited in Step 3 and assign them project-level roles.
+
+    Click **Create project**. Lightsail Power provisions the project workspace and redirects you to the project dashboard.
+
+    <Info>
+      Treat your first project as a **sandbox**. Explore integrations, test data pipelines, and experiment with analytics views here before you standardize naming conventions and data schemas for production projects.
+    </Info>
+  </Step>
+</Steps>
+
+## Next Steps
+
+With your organization configured and your first project running, you're ready to go deeper:
+
+<CardGroup cols={3}>
+  <Card title="Key Concepts" icon="book-open" href="/platform/key-concepts">
+    Understand workspaces, projects, roles, and API credentials — the four building blocks behind every feature.
+  </Card>
+  <Card title="Workspace Settings" icon="gear" href="/platform/configuration/settings">
+    Customize notifications, security policies, SSO configuration, and billing from the Settings panel.
+  </Card>
+  <Card title="Roles & Permissions" icon="shield-check" href="/platform/administration/roles-permissions">
+    Learn how Admin, Member, and Viewer roles interact — and how to override them at the project level.
+  </Card>
+</CardGroup>

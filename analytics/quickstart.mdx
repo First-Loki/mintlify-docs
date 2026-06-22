@@ -1,0 +1,79 @@
+---
+title: "Build your first analytics dashboard with data"
+sidebarTitle: "Quickstart"
+description: "Go from a blank analytics workspace to a live dashboard with a chart pulling from a real data source — all in a few minutes with Lightsail Power Analytics."
+---
+
+Lightsail Power Analytics lets you connect data sources, create dashboards, and share insights across your team — all from a single, unified interface. Whether you're pulling from a production database, a data warehouse, or a SaaS tool like Salesforce or Stripe, this guide walks you through every step from your first connection to a live, shareable chart.
+
+## Prerequisites
+
+Before you begin, make sure you have the following ready:
+
+- **Credentials for your data source** — this means a database hostname, username, and password for relational databases, or an API key for SaaS-based sources.
+- **Admin or Member role** in your Lightsail Power workspace — Viewer-only accounts cannot create data sources or dashboards.
+
+<Note>
+  If your data source sits behind a firewall, add the Lightsail Power outbound IP addresses to your allowlist before running a connection test. Skipping this step will cause the test to time out even when your credentials are correct.
+</Note>
+
+## Get started
+
+<Steps>
+  <Step title="Connect a data source">
+    A data source is the foundation of every dashboard. Start by opening **Analytics** in the left navigation, then go to **Data sources → Add source**.
+
+    1. Select your **source type** from the dropdown — for example, PostgreSQL, Snowflake, or Stripe.
+    2. Enter the required **connection details** for your source type (host, port, database name, username, and password, or an API key for SaaS sources).
+    3. Click **Test connection**. Lightsail Power validates your credentials and network access. A green checkmark means you're good to go; an error message includes a reason code to help you troubleshoot firewall rules or credential issues.
+    4. Once the test passes, click **Save**.
+
+    Your new source now appears in the Data sources list and is ready to query. For a full breakdown of every connection field, supported source types, and sync frequency options, see [Connect a data source](/analytics/connect-data).
+  </Step>
+
+  <Step title="Create a dashboard">
+    With a data source saved, you're ready to build your first dashboard. Navigate to **Analytics → Dashboards → New dashboard**.
+
+    Give the dashboard a name that reflects either the data it will display or the team that will use it. Clear, specific names make dashboards easier to discover later — for example:
+
+    - `Weekly revenue`
+    - `Support KPIs`
+    - `Marketing pipeline – Q3`
+
+    Click **Create** to open the empty dashboard canvas.
+  </Step>
+
+  <Step title="Add a chart">
+    Inside your new dashboard, click **Add chart** to open the chart builder.
+
+    1. **Select a data source** — choose the source you connected in Step 1 from the dropdown.
+    2. **Choose a chart type** — if you're not sure where to start, bar charts work well for comparisons across categories, line charts suit time-series trends, and number cards highlight a single key metric at a glance.
+    3. **Configure your axes** — set the **x-axis** field (typically a date, category, or dimension) and the **y-axis** field (typically a numeric measure or aggregation like `SUM(revenue)` or `COUNT(tickets)`).
+    4. Optionally add filters, groupings, or a chart title to give the visualization more context.
+    5. Click **Save** to add the chart to your dashboard canvas. Drag and resize it to fit your layout.
+
+    <Tip>
+      Start with one or two charts to validate your data is returning what you expect before building out a full dashboard. It's much easier to spot a misconfigured query on a simple chart than inside a complex layout.
+    </Tip>
+  </Step>
+
+  <Step title="Share your dashboard">
+    Once your dashboard looks the way you want, click **Share** in the dashboard header to open the sharing panel.
+
+    You have two options for sharing:
+
+    - **Copy link** — generates a direct URL you can paste into a Slack message, email, or internal wiki. Use the **Access level** control to decide whether the link is visible to your entire workspace or only to specific members.
+    - **Embed code** — generates an `<iframe>` snippet you can drop into an external tool such as Notion, Confluence, or a customer-facing portal. The embedded view respects the same access-level setting.
+
+    <Warning>
+      Setting the access level to **Public** makes your dashboard visible to anyone with the link, including people outside your workspace. Only use this setting for data you're comfortable sharing externally.
+    </Warning>
+  </Step>
+</Steps>
+
+## Next steps
+
+Now that your first dashboard is live, explore what else you can build:
+
+- **Charts & visualizations** — learn every chart type Lightsail Power supports, including scatter plots, funnels, pivot tables, and geographic maps.
+- **Scheduled reports** — automatically email a dashboard snapshot to stakeholders on a daily, weekly, or monthly cadence so your team stays informed without logging in.

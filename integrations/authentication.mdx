@@ -1,0 +1,124 @@
+---
+title: "Authentication methods for Lightsail Power integrations"
+sidebarTitle: "Auth Methods"
+description: "Learn when to use API keys, OAuth 2.0, or service accounts for your integrations, and how to rotate each credential type safely without disrupting active syncs."
+---
+
+Different integrations rely on different authentication methods depending on what the external service supports. Choosing the right method — and managing your credentials carefully over time — directly affects both the security posture of your workspace and the reliability of your data syncs. This page explains how each method works in Lightsail Power, when to use it, and how to rotate credentials when the time comes.
+
+---
+
+## API keys
+
+API keys are long-lived tokens issued directly by the external service. They are the simplest authentication method to set up and work well for server-to-server connections where OAuth 2.0 is not available. Because they don't expire automatically, they're low-maintenance — but they also require careful handling, since a leaked key grants persistent access until it's manually revoked.
+
+**When to use API keys:**
+Use this method with services that issue personal access tokens or static API keys. This includes most developer tools, data warehouses, analytics platforms, and general-purpose data APIs.
+
+### How to rotate an API key
+
+Rotate your API key whenever you suspect it may have been exposed, when a team member who had access leaves your organization, or as part of a regular credential hygiene cycle.
+
+<Steps>
+  <Step title="Generate a new key in the external service">
+    Log in to the external service and navigate to its API or developer settings. Generate a new API key or personal access token. Do not revoke the old one yet.
+  </Step>
+  <Step title="Open the integration credentials in Lightsail Power">
+    Go to **Integrations → [Integration name] → Credentials** in your Lightsail Power workspace.
+  </Step>
+  <Step title="Paste the new key and save">
+    Replace the existing key with the new one in the credentials field, then click **Save**. Lightsail Power immediately begins using the new key for all subsequent syncs.
+  </Step>
+  <Step title="Verify the connection">
+    Click **Test connection** to confirm that the new key is working correctly and syncs are succeeding.
+  </Step>
+  <Step title="Revoke the old key in the external service">
+    Only after verifying the new key works, return to the external service and revoke the old key.
+  </Step>
+</Steps>
+
+<Warning>
+  Revoking the old key before saving the new one in Lightsail Power causes a gap where syncs will fail with an authentication error. Always save and verify the new key first, then revoke the old one.
+</Warning>
+
+---
+
+## OAuth 2.0
+
+OAuth 2.0 lets you authorize Lightsail Power to act on your behalf without sharing your password with the platform. Instead of static credentials, the service issues short-lived access tokens that Lightsail Power uses to make API calls. Lightsail Power handles token refresh automatically in the background, so your syncs keep running without intervention.
+
+**When to use OAuth 2.0:**
+Use this method with SaaS tools that support OAuth authorization flows. This includes most CRMs, productivity suites, communication platforms, and project management tools.
+
+### How the OAuth flow works
+
+<Steps>
+  <Step title="Initiate authorization">
+    Click **Authorize** on the connector setup page in Lightsail Power. This opens the external service's authorization screen.
+  </Step>
+  <Step title="Sign in to the external service">
+    If you're not already signed in, enter your credentials for the external service on its own login page — Lightsail Power never sees your password.
+  </Step>
+  <Step title="Approve the requested permissions">
+    Review the list of permissions Lightsail Power is requesting, then click **Allow** or **Authorize** to grant access.
+  </Step>
+  <Step title="Return to Lightsail Power">
+    The external service redirects you back to Lightsail Power automatically. Your access token and refresh token are stored encrypted and used for all future syncs.
+  </Step>
+</Steps>
+
+Access tokens expire on a schedule set by the external service — often within an hour. Lightsail Power uses the refresh token to obtain a new access token automatically before expiry, so your syncs are uninterrupted under normal conditions.
+
+<Note>
+  If a user revokes Lightsail Power's access from the external service's settings, or if the OAuth app permissions change, the refresh token becomes invalid. The affected integration displays a **Reconnect** prompt in Lightsail Power. Click it to re-authorize and restore the connection.
+</Note>
+
+<Tip>
+  For integrations used by your entire team, consider authorizing via a shared service account or a dedicated integration user in the external service, rather than a personal account. This prevents syncs from breaking if the authorizing user leaves the team.
+</Tip>
+
+---
+
+## Service accounts
+
+Service accounts are non-personal identities created in the external system specifically for machine-to-machine access. Unlike API keys tied to a user and OAuth tokens tied to a user's session, service accounts exist independently of any individual. This makes them ideal for production integrations that need to remain stable regardless of team changes.
+
+**When to use service accounts:**
+Use this method when access must not be tied to an individual user's account, when you need granular permission scoping at the infrastructure level, or when the external service doesn't support OAuth. Common examples include Google Cloud Platform, AWS, and enterprise SaaS platforms with role-based access controls.
+
+### Setup
+
+In the connector setup dialog in Lightsail Power, click **Upload credentials file** and select the credentials file provided by the external service. This is typically a JSON key file (for example, a Google Cloud service account key) or a certificate file. Enter any additional required fields displayed in the dialog, such as a project ID, tenant ID, or region. Lightsail Power stores the uploaded file encrypted at rest.
+
+### How to rotate a service account key
+
+<Steps>
+  <Step title="Generate a new key in the external service">
+    In the external service's admin console, navigate to the service account and generate a new key. Download the new credentials file.
+  </Step>
+  <Step title="Upload the new credentials file in Lightsail Power">
+    Go to **Integrations → [Integration name] → Credentials** and upload the new credentials file. Click **Save**.
+  </Step>
+  <Step title="Verify the connection">
+    Click **Test connection** to confirm that the new credentials are working and syncs are succeeding.
+  </Step>
+  <Step title="Deactivate the old key">
+    Return to the external service and deactivate or delete the old service account key. Do this only after confirming the new key works.
+  </Step>
+</Steps>
+
+<Warning>
+  Some external services allow multiple active keys per service account simultaneously, while others do not. Check the service's documentation before generating a new key to avoid accidentally invalidating the current one.
+</Warning>
+
+---
+
+## Choosing the right method
+
+| Method | Best for | Expires automatically | Tied to a user |
+|---|---|---|---|
+| API key | Developer tools, data APIs | No | Sometimes |
+| OAuth 2.0 | SaaS tools, CRMs, productivity apps | Yes (auto-refreshed) | Yes |
+| Service account | Cloud platforms, enterprise SaaS | No | No |
+
+Each connector in the Lightsail Power catalog supports a specific authentication method determined by the external service. The method is displayed on the connector card before you begin setup. If you're unsure which method to use, start with the [integrations quickstart](/integrations/quickstart) guide, which walks you through the full setup process step by step.

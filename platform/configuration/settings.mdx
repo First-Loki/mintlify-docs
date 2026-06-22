@@ -1,0 +1,84 @@
+---
+title: "Configure workspace settings in Lightsail Power"
+sidebarTitle: "Settings"
+description: "Control your workspace name, timezone, session security, IP allowlisting, SSO configuration, and notification defaults from the Settings → General page."
+---
+
+Your workspace's General settings determine how Lightsail Power identifies your organization across the UI, email notifications, and shared links — and they establish the baseline for how dates, times, and notifications behave for every member. To access these controls, navigate to **Settings → General** in the left sidebar. Changes take effect immediately unless noted otherwise.
+
+## General
+
+The fields in this section shape your workspace's identity and regional defaults. Use the table below as a reference for what each setting controls and what to watch out for before making changes.
+
+| Setting | What it controls | Notes |
+|---|---|---|
+| **Workspace name** | Display name shown in the UI, outgoing email notifications, and any shared links | Choose a name your team will recognize at a glance; it can be updated at any time |
+| **Workspace slug** | URL-safe identifier used in API calls and browser URLs (e.g., `app.lightsailpower.com/your-slug`) | Changing the slug updates **all** workspace URLs — notify your team before saving so bookmarks and integrations can be updated |
+| **Timezone** | Default timezone for date displays, scheduled jobs, and report timestamps | Individual members can override this in their personal preferences; the workspace timezone applies to system-level jobs and any member who has not set a personal preference |
+| **Language** | Default display language for new members joining the workspace | Existing members retain their individual language setting unless they reset it |
+
+## Security
+
+Lightsail Power gives you three layers of security configuration under **Settings → General → Security**. Select the tab that matches what you want to configure.
+
+<Tabs>
+  <Tab title="Session settings">
+    Session settings control how long authenticated sessions remain valid and whether sensitive actions require a fresh login.
+
+    - **Session timeout** — By default, authenticated sessions expire after **7 days** of inactivity. You can shorten this to 1 hour, 4 hours, 24 hours, or 48 hours to match your organization's security policy. Members are prompted to re-authenticate when their session lapses.
+    - **Force re-authentication before sensitive settings** — When enabled, Lightsail Power requires members to confirm their password (or SSO credentials) before accessing billing, workspace settings, or security configuration — even if their session is still active. Enable this to add a second checkpoint for high-impact actions.
+  </Tab>
+  <Tab title="IP allowlist">
+    The IP allowlist restricts workspace access to requests originating from specific IP ranges. This is useful for organizations that route employee traffic through a fixed office or VPN IP.
+
+    To add a range, enter one or more CIDR blocks (e.g., `203.0.113.0/24`) in the allowlist field, then click **Save**. Lightsail Power evaluates every login and API request against the list.
+
+    <Warning>
+      Before enabling the IP allowlist, confirm that your own current IP address — or the IP range that covers it — is included in the list. If you save an allowlist that excludes your IP, you will be locked out of the workspace immediately. If this happens, contact Lightsail Power Support to have the restriction lifted.
+    </Warning>
+  </Tab>
+  <Tab title="SSO">
+    Connect a SAML 2.0 or OpenID Connect (OIDC) identity provider to centralize authentication through your existing directory — such as Okta, Azure AD, or Google Workspace.
+
+    To configure SSO:
+
+    1. Select your identity provider type (**SAML 2.0** or **OIDC**).
+    2. Enter the metadata URL or paste your IdP's XML/JSON configuration.
+    3. Map the required attributes (`email`, `name`) to your IdP's claim fields.
+    4. Click **Test connection** to verify the setup before going live.
+    5. Toggle **Enforce SSO** to make it mandatory for your workspace.
+
+    Once SSO is enforced, **password-based login is disabled for all non-Admin members**. Workspace Admins retain password login as a fallback so they can recover access if the IdP becomes unavailable.
+
+    <Note>
+      Members who were previously using email/password login will be prompted to authenticate via SSO the next time their session expires. Advise your team before enforcing SSO to avoid unexpected login failures.
+    </Note>
+  </Tab>
+</Tabs>
+
+## Notification defaults
+
+Notification defaults set the baseline communication preferences applied to **all new members** when they join your workspace. Existing members keep their individual preferences unless you explicitly reset them.
+
+To adjust defaults, go to **Settings → General → Notification defaults** and configure the options below.
+
+<Accordion title="Email digests">
+  Send members a periodic summary of activity across their projects. Choose between:
+
+  - **Daily digest** — Sent each morning covering the previous day's activity.
+  - **Weekly digest** — Sent on Monday mornings covering the previous week.
+
+  Members can switch between daily and weekly — or disable digests entirely — from their personal notification preferences.
+</Accordion>
+
+<Accordion title="Mention alerts">
+  When **Mention alerts** is enabled, members receive an immediate email every time someone @-mentions them in a comment, task, or document. This default is **on** out of the box and is the setting most members prefer to keep enabled.
+
+  <Tip>
+    If your team communicates at high volume, consider setting the workspace default to **off** and letting members opt in individually. This reduces inbox noise for members who monitor Lightsail Power directly.
+  </Tip>
+</Accordion>
+
+<Accordion title="Project updates">
+  Notify members when the status of a project they belong to changes — for example, when a project moves from **Active** to **On hold** or is marked **Complete**. Enable this default to keep everyone oriented on project health without requiring them to check the dashboard manually.
+</Accordion>

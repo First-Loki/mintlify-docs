@@ -1,0 +1,96 @@
+---
+title: "Connect a data source to Lightsail Power Analytics"
+sidebarTitle: "Connect Data"
+description: "Learn which databases, data warehouses, and SaaS tools Lightsail Power supports, and how to configure connection settings and sync frequency for each source."
+---
+
+Before you can build dashboards or run reports, you need at least one data source connected to your workspace. Lightsail Power Analytics supports a wide range of relational databases, cloud data warehouses, and SaaS tools through a single, consistent connection interface — so the process is nearly identical regardless of which source you're adding. This page covers every source type, every connection field, and the sync frequency options available after you connect.
+
+## Supported sources
+
+<Tabs>
+  <Tab title="Databases">
+    Lightsail Power can connect directly to the following relational databases. You'll need network access from the platform's outbound IP addresses to your database host, plus a user account with at least read permissions on the tables you want to query.
+
+    | Database | Notes |
+    |---|---|
+    | **PostgreSQL** | Versions 11 and above; SSL strongly recommended for production instances |
+    | **MySQL / MariaDB** | MySQL 5.7+ and MariaDB 10.3+; specify the target database name in the connection form |
+    | **Microsoft SQL Server** | SQL Server 2016 and above; Windows Authentication is not supported — use SQL Server Authentication |
+    | **SQLite** | Upload a `.sqlite` or `.db` file directly; no host or credentials required |
+    | **Oracle Database** | Oracle 12c and above; requires the Oracle Instant Client driver, configured in your workspace settings |
+  </Tab>
+  <Tab title="Data warehouses">
+    Data warehouse connections use each platform's native driver or REST API. Query performance depends on your warehouse's compute resources — Lightsail Power does not cache warehouse results unless you enable scheduled sync.
+
+    | Warehouse | Notes |
+    |---|---|
+    | **Snowflake** | Authenticate with username/password or key-pair; specify your account identifier (e.g., `xy12345.us-east-1`) |
+    | **Google BigQuery** | Authenticate using a service account JSON key; the service account needs `BigQuery Data Viewer` and `BigQuery Job User` roles |
+    | **Amazon Redshift** | Connect via JDBC endpoint; ensure the Redshift cluster's VPC security group allows inbound traffic from Lightsail Power IPs |
+    | **Databricks** | Use a personal access token and your workspace's SQL warehouse HTTP path |
+    | **ClickHouse** | HTTP interface supported; native TCP protocol is not currently available |
+  </Tab>
+  <Tab title="SaaS tools">
+    SaaS source connections use each provider's official API. Lightsail Power handles OAuth flows where supported, or accepts an API key or secret directly. Data from SaaS sources is always fetched on a scheduled or manual basis — real-time sync is not available for API-based sources.
+
+    | SaaS tool | Auth method | Notes |
+    |---|---|---|
+    | **Salesforce** | OAuth 2.0 | Connect via the Salesforce authorization flow; grants read access to objects in your org |
+    | **HubSpot** | OAuth 2.0 | Connect your HubSpot portal; access contacts, deals, companies, and engagement data |
+    | **Stripe** | API key | Use a restricted key with at least Read permissions on the resources you want to query |
+    | **Google Analytics** | OAuth 2.0 | Connects to GA4 properties; Universal Analytics (UA) is not supported |
+    | **Zendesk** | API token | Requires an admin-generated API token and your Zendesk subdomain |
+  </Tab>
+</Tabs>
+
+## Connection settings
+
+Navigate to **Analytics → Data sources → Add source** to open the connection form. The fields below appear for all source types; some fields are hidden or pre-populated depending on the source you select.
+
+| Field | Description |
+|---|---|
+| **Source name** | A human-readable label for this source as it appears throughout the Lightsail Power UI. Choose something your teammates will recognise, such as `Production Postgres` or `Stripe – Live`. |
+| **Source type** | Select from the supported source list. This choice determines which remaining fields are shown. |
+| **Host / URL** | The hostname or endpoint URL of your data source (e.g., `db.example.com` or `xy12345.snowflakecomputing.com`). Do not include the protocol or port here. |
+| **Port** | The TCP port to connect on. Lightsail Power pre-fills the default port for common source types (e.g., `5432` for PostgreSQL, `3306` for MySQL), but you can override this if your instance uses a non-standard port. |
+| **Database / Schema** | The specific database name or schema to connect to. Lightsail Power's queries will be scoped to this context. |
+| **Username / API key** | The credential used to authenticate. For databases, this is a SQL user account. For SaaS sources, this is your API key or token. |
+| **Password / Secret** | The corresponding password or secret. This value is stored encrypted at rest and is never displayed again after you save the connection. |
+| **SSL mode** | Controls whether the connection uses SSL/TLS. Choose **Require** to enforce encrypted connections (recommended for all production sources), **Prefer** to use SSL when available, or **Disable** only for local development environments. |
+| **Test connection** | Validates your credentials and network access before saving. If the test fails, the error message includes a reason code — for example, `CONNECTION_REFUSED` points to a firewall rule, while `AUTHENTICATION_FAILED` points to incorrect credentials. |
+
+<Warning>
+  Never use a database superuser or admin account as your Lightsail Power credential. Create a dedicated read-only user scoped to only the schemas and tables your dashboards need. This limits exposure if the credential is ever compromised.
+</Warning>
+
+## Sync frequency
+
+After you save a data source, configure how often Lightsail Power fetches new data from it. Open the source from **Analytics → Data sources**, then select the **Sync** tab.
+
+**Real-time**
+Queries run live against your source every time a dashboard loads or a report runs. This gives you the freshest possible data with no lag, but it does mean every dashboard view generates a query against your database or warehouse.
+
+- Best for: low-latency sources where queries are indexed and fast.
+- Not available for: SaaS tool sources (API rate limits make live querying impractical).
+
+**Scheduled sync**
+Lightsail Power fetches a snapshot of your data on a fixed interval and caches the result. Dashboard loads read from the cache, keeping your source query load predictable.
+
+Available intervals: **15 minutes**, **1 hour**, **6 hours**, or **daily**.
+
+- Best for: large datasets, slow-running queries, or API-based sources with rate limits.
+- The cache is invalidated and refreshed automatically at the end of each interval.
+
+**Manual**
+Data is only fetched when you click **Sync now** on the source detail page. No automatic refreshes occur.
+
+- Best for: one-off file imports (e.g., a SQLite upload) or sources you only need to update occasionally.
+
+<Info>
+  Available sync intervals depend on your Lightsail Power plan. Free plan workspaces support **daily sync only**. Upgrade to a paid plan to unlock 15-minute, 1-hour, and 6-hour intervals.
+</Info>
+
+<Tip>
+  If you're unsure which sync frequency to choose, start with **1-hour scheduled sync**. You can always switch to real-time or a shorter interval once you've confirmed your queries are performant and your source can handle the load.
+</Tip>

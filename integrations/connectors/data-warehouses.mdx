@@ -1,0 +1,139 @@
+---
+title: "Connect data warehouse sources in Lightsail Power"
+sidebarTitle: "Data Warehouses"
+description: "Connect Snowflake, BigQuery, Redshift, Databricks, and ClickHouse with the right auth method and optimize queries for fast, reliable dashboard performance."
+---
+
+Lightsail Power connects to all major cloud data warehouses so you can build dashboards and reports directly on top of your centralized data — without moving or duplicating records into a separate store. Each connector authenticates securely with your warehouse, queries only the data your visualizations need, and respects the access controls you have already defined in your warehouse environment.
+
+## Supported warehouses
+
+- Snowflake
+- Google BigQuery
+- Amazon Redshift
+- Databricks
+- ClickHouse
+
+---
+
+## Snowflake
+
+**Authentication:** Username and password, or key pair authentication (recommended for production environments).
+
+**Required connection fields:**
+
+| Field | Description | Example |
+|---|---|---|
+| Account identifier | Your Snowflake account locator | `xyz.us-east-1` |
+| Warehouse | The virtual warehouse to use for queries | `LIGHTSAIL_WH` |
+| Database | Target database | `ANALYTICS` |
+| Schema | Target schema | `PUBLIC` |
+| Role | Snowflake role to assume | `LIGHTSAIL_READER` |
+
+<Tip>
+  Create a dedicated role in Snowflake — for example, `LIGHTSAIL_READER` — and grant it read-only access to the specific schemas and tables Lightsail Power needs. Avoid using `ACCOUNTADMIN` or any role with write privileges. A least-privilege role reduces risk and makes it easy to audit exactly what Lightsail Power can access.
+</Tip>
+
+---
+
+## Google BigQuery
+
+**Authentication:** Service account JSON key.
+
+**Required connection fields:** Project ID, dataset, service account email.
+
+<Steps>
+  <Step title="Create a service account">
+    Open the [Google Cloud Console](https://console.cloud.google.com), navigate to **IAM & Admin → Service accounts**, and create a new service account for Lightsail Power.
+  </Step>
+  <Step title="Grant the required roles">
+    Assign the following roles to the service account on the target project:
+
+    - **BigQuery Data Viewer** — allows reading tables and datasets
+    - **BigQuery Job User** — allows running query jobs
+  </Step>
+  <Step title="Download the JSON key">
+    On the service account detail page, go to the **Keys** tab, click **Add key → Create new key**, and select **JSON**. Save the downloaded file securely.
+  </Step>
+  <Step title="Upload the key in Lightsail Power">
+    In the BigQuery connector setup, upload the JSON key file. Lightsail Power uses it to authenticate all queries to your project.
+  </Step>
+</Steps>
+
+<Note>
+  Store the downloaded service account JSON key securely and do not share it. If the key is compromised, rotate it immediately from the Google Cloud Console and update the connector in Lightsail Power.
+</Note>
+
+---
+
+## Amazon Redshift
+
+**Authentication:** Username and password, or IAM role (recommended for AWS-native environments).
+
+**Required connection fields:**
+
+| Field | Description | Default |
+|---|---|---|
+| Host endpoint | Your Redshift cluster endpoint | — |
+| Port | Port the cluster listens on | `5439` |
+| Database | Target database name | — |
+| Username | Database user | — |
+
+<Note>
+  Lightsail Power connects to Redshift from a fixed set of outbound IP addresses. Ensure these IP addresses are allowed in your Redshift cluster's security group inbound rules, or in your VPC's network ACL, before attempting to connect. You can find the current list of Lightsail Power outbound IPs in **Settings → Security → Outbound IP addresses**.
+</Note>
+
+---
+
+## Databricks
+
+**Authentication:** Personal access token.
+
+**Required connection fields:**
+
+| Field | Description | Example |
+|---|---|---|
+| Workspace URL | Your Databricks workspace URL | `https://adb-123456789.7.azuredatabricks.net` |
+| HTTP path | SQL warehouse or cluster HTTP path | `/sql/1.0/warehouses/abc123` |
+| Access token | Personal access token from Databricks | `dapi...` |
+
+Lightsail Power supports connections to both **SQL warehouses** (recommended for analytics workloads) and **cluster-based** connections. SQL warehouses offer faster startup times and predictable scaling, making them the better choice for dashboard queries.
+
+<Tip>
+  Generate a dedicated personal access token in Databricks for Lightsail Power rather than reusing a personal token. Navigate to **Settings → Developer → Access tokens** in Databricks to create one. This makes it easy to revoke access independently if needed.
+</Tip>
+
+---
+
+## ClickHouse
+
+**Authentication:** Username and password.
+
+**Required connection fields:**
+
+| Field | Description | Default |
+|---|---|---|
+| Host | ClickHouse server hostname | — |
+| Port | Port for the chosen interface | `8443` (HTTPS) |
+| Database | Target database | — |
+| Username | ClickHouse user | — |
+
+Lightsail Power supports both the **native TCP protocol** and the **HTTP interface** for ClickHouse connections. For cloud-hosted ClickHouse (such as ClickHouse Cloud), use the HTTP interface on port `8443` with TLS enabled. For self-hosted deployments on a private network, the native protocol is also available.
+
+---
+
+## Query optimization tips
+
+Connecting directly to a data warehouse gives you power and flexibility, but unoptimized queries can be slow or expensive — especially on large tables. Apply these practices to keep your dashboards fast and your warehouse costs predictable.
+
+<Tip>
+  **Use scheduled sync instead of live queries for large tables.** When a dashboard chart runs a live query against an unindexed column on a table with hundreds of millions of rows, response times can be unpredictable. Scheduled syncs let Lightsail Power cache a pre-aggregated result set so your dashboards load instantly.
+</Tip>
+
+- **Create read-only views or materialized views** in your warehouse to serve dashboard queries. A well-defined view pre-joins tables, applies filters, and limits the columns exposed, so every chart query against it is fast and predictable. Materialized views go further by pre-computing aggregations on a schedule.
+
+- **Set row limits in chart queries** to prevent accidentally scanning full tables during dashboard development. In the query editor, use the **Row limit** control to cap results at a safe number while you iterate, then remove the limit only after you have confirmed your query is selective and performant.
+
+- **Partition and cluster your tables** on the columns most commonly used in dashboard filters — typically date or timestamp columns. Partitioning ensures Lightsail Power queries scan only the relevant partition rather than the entire table.
+
+- **Monitor query history in your warehouse.** Most warehouses (Snowflake, BigQuery, Redshift) provide a query history view where you can see the execution time and bytes scanned for each query Lightsail Power runs. Use this to identify and optimize expensive queries before they affect your team's experience.

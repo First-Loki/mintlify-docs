@@ -1,0 +1,77 @@
+---
+title: "Schedule automatic report delivery via email or Slack"
+sidebarTitle: "Scheduled Reports"
+description: "Set up recurring report schedules, choose email or Slack for delivery, and manage, pause, or delete schedules from one central location."
+---
+
+Scheduled reports in Lightsail Power run automatically on a defined cadence and deliver results directly to the people who need them — via email or Slack — without anyone having to log in and pull the data manually. Once you configure a schedule, Lightsail Power handles every run, keeps delivery consistent, and gives recipients a link to the full report whenever they're ready to dig deeper. This guide walks you through creating a schedule, configuring delivery, and managing schedules after they're live.
+
+## Create a schedule
+
+<Steps>
+  <Step title="Open the scheduling dialog">
+    Open a saved report and click **Schedule delivery** in the report toolbar. Only saved reports can be scheduled — if you haven't saved the report yet, you'll be prompted to do so before continuing.
+  </Step>
+  <Step title="Set the frequency">
+    Choose how often the report should run: **daily**, **weekly**, or **monthly**. Weekly schedules let you pick a specific day of the week; monthly schedules let you pick a date within the month.
+  </Step>
+  <Step title="Choose the delivery time">
+    Select the time of day for delivery. All times are based on your **workspace timezone**, which is configured under **Settings → Workspace**. Keep this in mind if your recipients are in different time zones.
+  </Step>
+  <Step title="Proceed to recipients">
+    Click **Next** to move to the recipient configuration step, where you'll choose email, Slack, or both.
+  </Step>
+</Steps>
+
+## Choose recipients
+
+<Tabs>
+  <Tab title="Email">
+    Enter one or more email addresses in the **Recipients** field, separated by commas. Recipients don't need to be members of your Lightsail Power workspace — you can send scheduled reports to any valid email address, including external stakeholders and clients.
+
+    Each email delivery includes:
+
+    - **Summary header** — the report name and the exact date and time the report ran
+    - **Inline preview** — the first 10 rows of the report, rendered directly in the email body for a quick scan without clicking through
+    - **Full report link** — a direct link to view or download the complete report in Lightsail Power
+    - **CSV attachment** — an optional attachment of the full report data; toggle this on or off in the **Delivery settings** section of the schedule editor
+
+    <Note>
+      Recipients who receive the CSV attachment or click the full report link will see data as of the scheduled run time, not real-time data. The snapshot is preserved so that report results remain consistent for everyone who receives a given delivery.
+    </Note>
+  </Tab>
+  <Tab title="Slack">
+    Connect your workspace's Slack integration — if you haven't already — then select a **channel** or a specific **direct message recipient** to receive the report.
+
+    Each Slack delivery includes:
+
+    - **Summary card** — a formatted message showing the report name, run time, total row count, and key metrics drawn from the report
+    - **Full report link** — a button that takes the recipient directly to the full report in Lightsail Power
+
+    <Info>
+      Slack delivery requires the Slack integration to be connected to your workspace. If the integration isn't set up yet, refer to the messaging connectors documentation for step-by-step setup instructions.
+    </Info>
+
+    <Tip>
+      Post high-visibility reports to a shared channel rather than individual DMs. Channel delivery lets the whole team see the report at once, discuss findings in-thread, and avoids recipients missing a DM notification.
+    </Tip>
+  </Tab>
+</Tabs>
+
+## Manage schedules
+
+All active and paused schedules are listed under **Analytics → Reports → Schedules**. From this page you can take the following actions on any schedule:
+
+- **Pause** — Temporarily suspend deliveries without deleting the schedule. The schedule retains its frequency, time, and recipient configuration and can be resumed at any time. Pausing is useful during data migrations, report rebuilds, or planned maintenance windows.
+
+- **Edit** — Update the frequency, delivery time, or recipient list for an existing schedule. Changes take effect on the next scheduled run. You can also toggle the CSV attachment on or off from the edit view.
+
+- **Run now** — Trigger an immediate delivery outside the regular cadence. Use this to send an on-demand snapshot to recipients without waiting for the next scheduled run or to verify that a new schedule is working correctly.
+
+- **Delete** — Permanently remove the schedule. The underlying report is not affected — only the delivery schedule is deleted. This action cannot be undone.
+
+<Warning>
+  Deleting a schedule immediately stops all future deliveries. If you only need to pause temporarily, use **Pause** instead to preserve the schedule configuration.
+</Warning>
+
+Recipients can remove themselves from a schedule at any time by clicking the **Unsubscribe** link in the footer of any scheduled email delivery. Workspace admins can also add or remove recipients directly from the schedule management page under **Analytics → Reports → Schedules**.
